@@ -1,0 +1,27 @@
+version: 0.0
+os: linux
+files:
+  - source: .
+    destination: /ubuntu/deployments/shortly-backend
+hooks:
+  BeforeInstall:
+    - location: scripts/before_install.sh # Install dependencies
+      timeout: 600
+      runas: root
+  AfterInstall:
+    - location: scripts/after_install.sh # Perform actions after installation
+      runas: root
+      timeout: 300
+      # Configurações do SNS
+      notification:
+        topic: arn:aws:sns:us-west-2:123456789012:my-codedeploy-topic
+        subject: "Deployment completed successfully"
+        status: "SUCCESS"
+  ApplicationStart:
+    - location: scripts/application_start.sh # Start the application
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: scripts/application_stop.sh # Stop the application
+      timeout: 300
+      runas: root
