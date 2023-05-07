@@ -14,7 +14,7 @@ hooks:
       timeout: 300
       # Configurações do SNS
       notification:
-        topic: arn:aws:sns:us-west-2:123456789012:my-codedeploy-topic
+        topic: arn:aws:sns:us-east-1:802157251259:code-deploy-sns-topic
         subject: "Deployment completed successfully"
         status: "SUCCESS"
   ApplicationStart:
