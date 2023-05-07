@@ -6,15 +6,15 @@ files:
 hooks:
   BeforeInstall:
     - location: scripts/before_install.sh # Install dependencies
-      runas: ubuntu
+      runas: root
       timeout: 600
   Install:
     - location: scripts/install.sh # Install the application
-      runas: ubuntu
+      runas: root
       timeout: 600
   AfterInstall:
     - location: scripts/after_install.sh # Perform actions after installation
-      runas: ubuntu
+      runas: root
       timeout: 300
       # Configurações do SNS
       notification:
@@ -23,9 +23,9 @@ hooks:
         status: "SUCCESS"
   ApplicationStart:
     - location: scripts/application_start.sh # Start the application
-      runas: ubuntu
+      runas: root
       timeout: 300
   ApplicationStop:
     - location: scripts/application_stop.sh # Stop the application
-      runas: ubuntu
+      runas: root
       timeout: 300
