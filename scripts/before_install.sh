@@ -1,3 +1,4 @@
 #!/bin/sh
 
-npm install
+echo "[🚀] Running step 'BeforeInstall'..."
+echo "[🚀] Nothing to do here..."
