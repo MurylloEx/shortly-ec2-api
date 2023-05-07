@@ -7,5 +7,3 @@ cd /home/ubuntu/code-deploy/shortly-backend
 echo "[🚀] Installing dependencies..."
 sudo npm install
 echo "[🚀] Installed dependencies..."
-
-exit 1
