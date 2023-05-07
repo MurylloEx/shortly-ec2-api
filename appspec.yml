@@ -4,12 +4,12 @@ files:
   - source: .
     destination: /home/ubuntu/code-deploy/shortly-backend
 hooks:
+  ApplicationStop:
+    - location: scripts/application_stop.sh # Stop the application
+      runas: root
+      timeout: 300
   BeforeInstall:
     - location: scripts/before_install.sh # Install dependencies
-      runas: root
-      timeout: 600
-  Install:
-    - location: scripts/install.sh # Install the application
       runas: root
       timeout: 600
   AfterInstall:
@@ -23,9 +23,5 @@ hooks:
         status: "SUCCESS"
   ApplicationStart:
     - location: scripts/application_start.sh # Start the application
-      runas: root
-      timeout: 300
-  ApplicationStop:
-    - location: scripts/application_stop.sh # Stop the application
       runas: root
       timeout: 300
