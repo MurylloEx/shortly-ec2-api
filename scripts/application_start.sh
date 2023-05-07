@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 echo "[🚀] Running step 'ApplicationStart'..."
 cd /home/ubuntu/code-deploy/shortly-backend

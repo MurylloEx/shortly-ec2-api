@@ -1,4 +1,6 @@
 #!/bin/sh
+set -e
+
 echo "[🚀] Running step 'AfterInstall'..."
 cd /home/ubuntu/code-deploy/shortly-backend
 
