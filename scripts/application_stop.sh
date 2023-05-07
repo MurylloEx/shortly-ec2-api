@@ -1,6 +1,4 @@
 #!/bin/sh
-set -e
-
 echo "[🚀] Running step 'ApplicationStop'..."
 echo "[🚀] Killing process in port 8192 using 'fuser' command..."
 
