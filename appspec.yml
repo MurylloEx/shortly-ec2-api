@@ -5,11 +5,6 @@ files:
     destination: /home/ubuntu/code-deploy/prod-shortly
 file_exists_behavior: OVERWRITE
 permissions:
-  - object: /home/ubuntu/code-deploy/prod-shortly/scripts/aws
-    pattern: "**"
-    mode: 777
-    type:
-      - file
   - object: /home/ubuntu/code-deploy/prod-shortly/scripts/server
     pattern: "**"
     mode: 777
