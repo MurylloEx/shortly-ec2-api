@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: .
-    destination: /home/ubuntu/code-deploy/shortly-backend
+    destination: /home/ubuntu/code-deploy/prod-shortly
 hooks:
   ApplicationStop:
     - location: scripts/aws/application_stop.sh # Stop the application

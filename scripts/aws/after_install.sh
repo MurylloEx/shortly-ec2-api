@@ -2,7 +2,7 @@
 set -e
 
 echo "[🚀] Running step 'AfterInstall'..."
-cd /home/ubuntu/code-deploy/shortly-backend
+cd /home/ubuntu/code-deploy/prod-shortly
 
 echo "[🚀] Installing dependencies..."
 sudo npm install
