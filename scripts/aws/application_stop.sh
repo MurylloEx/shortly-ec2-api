@@ -1,4 +1,6 @@
 #!/bin/sh
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 echo "[🚀] Running step 'ApplicationStop'..."
 echo "[🚀] Killing process in port 8192 using 'fuser' command..."
 
