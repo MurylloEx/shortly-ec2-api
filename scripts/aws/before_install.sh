@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+echo "[🚀] Working dir: $(pwd)"
+
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 echo "[🚀] Working dir: $(pwd)"
