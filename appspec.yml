@@ -5,23 +5,22 @@ files:
     destination: /home/ubuntu/code-deploy/shortly-backend
 hooks:
   ApplicationStop:
-    - location: scripts/application_stop.sh # Stop the application
+    - location: scripts/aws/application_stop.sh # Stop the application
       runas: root
       timeout: 300
   BeforeInstall:
-    - location: scripts/before_install.sh # Install dependencies
+    - location: scripts/aws/before_install.sh # Install dependencies
       runas: root
       timeout: 600
   AfterInstall:
-    - location: scripts/after_install.sh # Perform actions after installation
+    - location: scripts/aws/after_install.sh # Perform actions after installation
       runas: root
       timeout: 300
-      # Configurações do SNS
       notification:
         topic: arn:aws:sns:us-east-1:802157251259:code-deploy-sns-topic
         subject: "Deployment completed successfully"
         status: "SUCCESS"
   ApplicationStart:
-    - location: scripts/application_start.sh # Start the application
+    - location: scripts/aws/application_start.sh # Start the application
       runas: root
       timeout: 300
