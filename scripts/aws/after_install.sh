@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+/home/ubuntu/code-deploy/prod-shortly
+
 echo "[🚀] Working dir: $(pwd)"
 echo "[🚀] Running step 'AfterInstall'..."
 
