@@ -3,6 +3,7 @@ set -e
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
+echo "[🚀] Working dir: $(pwd)"
 echo "[🚀] Running step 'AfterInstall'..."
 echo "[🚀] Installing dependencies..."
 sudo npm install
