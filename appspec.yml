@@ -3,6 +3,17 @@ os: linux
 files:
   - source: .
     destination: /home/ubuntu/code-deploy/prod-shortly
+permissions:
+  - object: /home/ubuntu/code-deploy/prod-shortly/scripts/aws
+    pattern: "**"
+    mode: 755
+    type:
+      - file
+  - object: /home/ubuntu/code-deploy/prod-shortly/scripts/server
+    pattern: "**"
+    mode: 755
+    type:
+      - file
 hooks:
   ApplicationStop:
     - location: scripts/aws/application_stop.sh # Stop the application

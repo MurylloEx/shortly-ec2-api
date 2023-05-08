@@ -1,5 +1,4 @@
 #!/bin/sh
-cd "$(dirname "${BASH_SOURCE[0]}")"
 
 echo "[🚀] Working dir: $(pwd)"
 echo "[🚀] Running step 'ApplicationStop'..."
