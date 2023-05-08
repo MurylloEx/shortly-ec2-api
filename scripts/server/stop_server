@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "Attempting to kill current running server..."
+sudo fuser -k 8192/tcp
