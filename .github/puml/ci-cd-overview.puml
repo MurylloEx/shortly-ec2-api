@@ -1,0 +1,96 @@
+@startuml "AWS Architecture Diagram"
+
+title "Shortly Architecture - Infrastructure"
+
+'left to right direction
+
+!define AWSPUML https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v15.0/dist
+
+!include AWSPUML/AWSCommon.puml
+!include AWSPUML/General/User.puml
+!include AWSPUML/General/Users.puml
+!include AWSPUML/General/Internet.puml
+!include AWSPUML/Groups/Region.puml
+!include AWSPUML/Groups/AWSCloud.puml
+!include AWSPUML/DeveloperTools/CodeStar.puml
+!include AWSPUML/DeveloperTools/CodeBuild.puml
+!include AWSPUML/DeveloperTools/CodeDeploy.puml
+!include AWSPUML/DeveloperTools/CodePipeline.puml
+
+!include AWSPUML/Database/RDS.puml
+!include AWSPUML/Groups/VPC.puml
+!include AWSPUML/Groups/Region.puml
+!include AWSPUML/Groups/AWSCloud.puml
+!include AWSPUML/Groups/SecurityGroup.puml
+!include AWSPUML/Groups/PublicSubnet.puml
+!include AWSPUML/Groups/PrivateSubnet.puml
+!include AWSPUML/Groups/AvailabilityZone.puml
+!include AWSPUML/Compute/EC2T3Instance.puml
+!include AWSPUML/Storage/SimpleStorageService.puml
+!include AWSPUML/ManagementGovernance/CloudWatch.puml
+!include AWSPUML/ApplicationIntegration/APIGateway.puml
+!include AWSPUML/NetworkingContentDelivery/Route53.puml
+!include AWSPUML/NetworkingContentDelivery/VPCRouter.puml
+!include AWSPUML/NetworkingContentDelivery/CloudFront.puml
+!include AWSPUML/NetworkingContentDelivery/VPCInternetGateway.puml
+!include AWSPUML/SecurityIdentityCompliance/CertificateManager.puml
+
+!define CodePipelineGroup(g_alias, g_label="AWS CodePipeline") AWSGroupEntity(g_alias, g_label, AWS_COLOR_BLUE, CodePipeline, CodePipelineGroup)
+
+AWSGroupColoring(CodePipelineGroup, #FFFFFF, AWS_COLOR_BLUE, plain)
+
+User(MyUser, "Engenheiro", "Quem utiliza e interage com o sistema")
+
+AWSCloudGroup(cloud) {
+  RegionGroup(region) {
+
+      CodePipelineGroup(pipelineFront){
+        CodeStar(MyCodeStarFront, "GitHub", "Integração com o GitHub")
+        CodeBuild(MyCodeBuildFront, "Builder", "Constrói a aplicação e gera a bundle final")
+      }
+
+      CloudFront(MyCloudFront, "Content Delivery Network", "Responsável por prover uma camada de cache para os recursos estáticos do React")
+      SimpleStorageService(MyS3, "Bucket Privado", "Repositório dos arquivos estáticos do React")
+
+
+
+      CodePipelineGroup(pipelineBack){
+        CodeStar(MyCodeStarBack, "GitHub", "Integração com o GitHub")
+        CodeDeploy(MyCodeDeployBack, "Deploy", "Implanta a aplicação na instância EC2")
+      }
+
+      VPCGroup(MyVPC) {
+
+        AvailabilityZoneGroup(MyAvailabilityZone, "Availability Zone (us-east-1a)") {
+          PublicSubnetGroup(MyPublicSubnet) {
+            SecurityGroupGroup(MySecurityGroupA, "Security Group A") {
+              EC2T3Instance(MyEC2, "Virtual Machine", "Máquina EC2 T3 Micro / Ubuntu")
+            }
+          }
+
+          PrivateSubnetGroup(MyPrivateSubnet) {
+            SecurityGroupGroup(MySecurityGroupB, "Security Group B") {
+              RDS(MyRDS, "MySQL 8.0.27", "Banco de dados relacional MySQL")
+            }
+          }
+        }
+        
+      }
+
+
+
+  }
+}
+
+
+MyCloudFront --> MyS3
+
+MyEC2 <--> MyRDS
+
+MyCodeStarFront --> MyCodeBuildFront
+MyCodeBuildFront --> MyS3
+
+MyCodeStarBack --> MyCodeDeployBack
+MyCodeDeployBack --> MyEC2
+
+@enduml

@@ -1,0 +1,85 @@
+@startuml "AWS Architecture Diagram"
+
+title "Shortly Architecture - Infrastructure"
+
+left to right direction
+
+!define AWSPUML https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v15.0/dist
+
+!include AWSPUML/AWSCommon.puml
+!include AWSPUML/Database/RDS.puml
+!include AWSPUML/General/User.puml
+!include AWSPUML/General/Users.puml
+!include AWSPUML/General/Internet.puml
+!include AWSPUML/Groups/VPC.puml
+!include AWSPUML/Groups/Region.puml
+!include AWSPUML/Groups/AWSCloud.puml
+!include AWSPUML/Groups/SecurityGroup.puml
+!include AWSPUML/Groups/PublicSubnet.puml
+!include AWSPUML/Groups/PrivateSubnet.puml
+!include AWSPUML/Groups/AvailabilityZone.puml
+!include AWSPUML/Compute/EC2T3Instance.puml
+!include AWSPUML/Storage/SimpleStorageService.puml
+!include AWSPUML/ManagementGovernance/CloudWatch.puml
+!include AWSPUML/ApplicationIntegration/APIGateway.puml
+!include AWSPUML/NetworkingContentDelivery/Route53.puml
+!include AWSPUML/NetworkingContentDelivery/VPCRouter.puml
+!include AWSPUML/NetworkingContentDelivery/CloudFront.puml
+!include AWSPUML/NetworkingContentDelivery/VPCInternetGateway.puml
+!include AWSPUML/SecurityIdentityCompliance/CertificateManager.puml
+
+Internet(MyInternet, "Internet", "Dispositivos ao redor do mundo")
+Users(MyUsers, "Usuários", "Quem utiliza e interage com o sistema")
+
+AWSCloudGroup(cloud) {
+  RegionGroup(region) {
+    
+    together {
+      Route53(MyRoute53, "Hosted Zone", "Processa as consultas DNS aos nomes de domínio do Shortly")
+      CloudFront(MyCloudFront, "Content Delivery Network", "Responsável por prover uma camada de cache para os recursos estáticos do React")
+      SimpleStorageService(MyS3, "Bucket Privado", "Repositório dos arquivos estáticos do React")
+      APIGateway(MyApiGateway, "API Gateway", "Encaminha a solicitação HTTP através do Internet Gateway em seu endereço público na porta 8192")
+      VPCInternetGateway(MyInternetGateway, "Gateway", "Internet Gateway que provê acesso à Internet para a sub-rede pública")
+      VPCRouter(MyRouter, "Roteador", "Roteador de tráfego TCP, UDP e DNS")
+      CertificateManager(MyCertificateManager, "Certificado SSL", "Serviço de emissão de certificados TLS/SSL da Amazon")
+    }
+    
+    CloudWatch(MyCloudWatch, "Grupo de Logs", "Grupos de logs da instância EC2")
+
+    VPCGroup(MyVPC) {
+
+      AvailabilityZoneGroup(MyAvailabilityZone, "Availability Zone (us-east-1a)") {
+        PublicSubnetGroup(MyPublicSubnet) {
+          SecurityGroupGroup(MySecurityGroupA, "Security Group A") {
+            EC2T3Instance(MyEC2, "Virtual Machine", "Máquina EC2 T3 Micro / Ubuntu")
+          }
+        }
+
+        PrivateSubnetGroup(MyPrivateSubnet) {
+          SecurityGroupGroup(MySecurityGroupB, "Security Group B") {
+            RDS(MyRDS, "MySQL 8.0.27", "Banco de dados relacional MySQL")
+          }
+        }
+      }
+      
+    }
+
+  }
+}
+
+MyInternet <--> MyRoute53
+MyUsers <--> MyRoute53
+
+MyRoute53 <--> MyCloudFront
+MyCloudFront <--> MyS3
+MyApiGateway -left-> MyCertificateManager
+MyCloudFront -right-> MyCertificateManager
+
+MyRoute53 <--> MyApiGateway
+MyApiGateway <--> MyInternetGateway
+MyInternetGateway <-left-> MyRouter
+MyRouter <--> MyEC2
+MyEC2 <--> MyRDS
+MyEC2 -up-> MyCloudWatch
+
+@enduml
