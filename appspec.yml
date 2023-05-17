@@ -1,0 +1,38 @@
+"file_exists_behavior": "OVERWRITE"
+"files":
+- "destination": "/home/ubuntu/code-deploy/prod-shortly-back"
+  "source": "."
+"hooks":
+  "AfterInstall":
+  - "location": "scripts/aws/after_install.sh --cwd=/home/ubuntu/code-deploy/prod-shortly-back"
+    "notification":
+      "status": "SUCCESS"
+      "subject": "Deployment status"
+      "topic": "arn:aws:sns:us-east-1:802157251259:prod-shortly-back-codedeploy-sns-topic"
+    "runas": "root"
+    "timeout": 300
+  "ApplicationStart":
+  - "location": "scripts/aws/application_start.sh --cwd=/home/ubuntu/code-deploy/prod-shortly-back"
+    "runas": "root"
+    "timeout": 300
+  "ApplicationStop":
+  - "location": "scripts/aws/application_stop.sh --cwd=/home/ubuntu/code-deploy/prod-shortly-back"
+    "runas": "root"
+    "timeout": 300
+  "BeforeInstall":
+  - "location": "scripts/aws/before_install.sh --cwd=/home/ubuntu/code-deploy/prod-shortly-back"
+    "runas": "root"
+    "timeout": 600
+"os": "linux"
+"permissions":
+- "mode": 755
+  "object": "/home/ubuntu/code-deploy/prod-shortly-back/scripts/aws"
+  "pattern": "**"
+  "type":
+  - "file"
+- "mode": 755
+  "object": "/home/ubuntu/code-deploy/prod-shortly-back/scripts/server"
+  "pattern": "**"
+  "type":
+  - "file"
+"version": "0.0"
