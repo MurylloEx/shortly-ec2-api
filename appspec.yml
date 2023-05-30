@@ -28,10 +28,6 @@ hooks:
     - location: scripts/aws/after_install.sh # Perform actions after installation
       runas: root
       timeout: 300
-      notification:
-        topic: arn:aws:sns:us-east-1:802157251259:code-deploy-sns-topic
-        subject: "Deployment completed successfully"
-        status: "SUCCESS"
   ApplicationStart:
     - location: scripts/aws/application_start.sh # Start the application
       runas: root
