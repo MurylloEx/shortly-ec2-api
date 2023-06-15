@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigurationService } from 'src/common/services';
+import { ConfigurationService, ShortlyService } from 'src/common/services';
 
 import { DomainModule } from 'src/domain';
 import { CachingModule } from './caching.module';
-import { ConfigurationModule } from './configuration.module';
 import { DatabaseModule } from './database.module';
+import { ConfigurationModule } from './configuration.module';
 
 @Module({
   imports: [
@@ -15,10 +15,12 @@ import { DatabaseModule } from './database.module';
     ConfigurationModule
   ],
   providers: [
-    ConfigurationService
+    ConfigurationService,
+    ShortlyService
   ],
   exports: [
-    ConfigurationService
+    ConfigurationService,
+    ShortlyService
   ]
 })
 export class ServicesModule {}

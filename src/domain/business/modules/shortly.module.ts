@@ -4,4 +4,4 @@ import { Module } from '@nestjs/common';
   imports: [],
   exports: []
 })
-export class BusinessDomainModule { }
+export class ShortlyModule { }
