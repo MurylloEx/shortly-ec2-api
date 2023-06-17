@@ -53,6 +53,7 @@ export class CreateTableShortUrlMigration1686805447945 implements MigrationInter
     table.addColumn(new TableColumn({
       name: 'real_url',
       type: 'varchar',
+      charset: 'utf8mb4',
       length: '2048',
       isNullable: false,
     }));
