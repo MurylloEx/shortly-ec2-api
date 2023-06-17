@@ -69,7 +69,7 @@ export class CreateTableShortUrlMigration1686805447945 implements MigrationInter
   }
 
   async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('short_url', true);
+    await queryRunner.dropTable('short_url', true);
   }
 
 }
