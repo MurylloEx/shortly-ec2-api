@@ -13,19 +13,23 @@ export class DeleteShortUrlHandler implements ICommandHandler<DeleteShortUrlComm
   ) {}
 
   async execute(command: DeleteShortUrlCommand): Promise<ShortUrl> {
-    const previousShortUrl = await this.repository.fetchOne({
-      where: {
-        shortCode: command.shortCode
+    try {
+      const previousShortUrl = await this.repository.fetchOne({
+        where: {
+          shortCode: command.shortCode
+        }
+      });
+  
+      const updateResult = await this.repository.deleteById(previousShortUrl.shortId);
+  
+      if (!updateResult.affected) {
+        throw new ShortUrlNotFoundDomainException();
       }
-    });
-
-    const updateResult = await this.repository.deleteById(previousShortUrl.shortId);
-
-    if (!updateResult.affected) {
+  
+      return previousShortUrl;
+    } catch (e) {
       throw new ShortUrlNotFoundDomainException();
     }
-
-    return previousShortUrl;
   }
 
 }

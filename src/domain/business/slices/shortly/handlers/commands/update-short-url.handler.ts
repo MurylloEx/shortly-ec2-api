@@ -13,30 +13,34 @@ export class UpdateShortUrlHandler implements ICommandHandler<UpdateShortUrlComm
   ) {}
 
   async execute(command: UpdateShortUrlCommand): Promise<ShortUrl> {
-    const previousShortUrl = await this.repository.fetchOne({
-      where: {
-        shortCode: command.shortCode
+    try {
+      const previousShortUrl = await this.repository.fetchOne({
+        where: {
+          shortCode: command.shortCode
+        }
+      });
+  
+      previousShortUrl.realUrl = command.realUrl;
+  
+      const updateResult = await this.repository.updateById(
+        previousShortUrl.shortId, 
+        previousShortUrl
+      );
+  
+      if (!updateResult.affected) {
+        throw new ShortUrlNotUpdatedDomainException();
       }
-    });
-
-    previousShortUrl.realUrl = command.realUrl;
-
-    const updateResult = await this.repository.updateById(
-      previousShortUrl.shortId, 
-      previousShortUrl
-    );
-
-    if (!updateResult.affected) {
+  
+      const currentShortUrl = await this.repository.fetchOne({
+        where: {
+          shortCode: command.shortCode
+        }
+      });
+  
+      return currentShortUrl;
+    } catch (e) {
       throw new ShortUrlNotUpdatedDomainException();
     }
-
-    const currentShortUrl = await this.repository.fetchOne({
-      where: {
-        shortCode: command.shortCode
-      }
-    });
-
-    return currentShortUrl;
   }
 
 }
