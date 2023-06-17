@@ -28,13 +28,8 @@ import {
   ServerConfigType
 } from 'src/domain/config/slices';
 
-import {
-  //Entidades
-} from 'src/domain/business';
-
-import {
-  //Migrações
-} from 'src/domain/business';
+import { ShortUrl } from 'src/domain/business';
+import { CreateTableShortUrlMigration1686805447945 } from 'src/domain/business';
 
 @Injectable()
 export class ConfigurationDomainService {
@@ -160,11 +155,13 @@ export class ConfigurationDomainService {
   }
 
   configureEntities(): Function[] {
-    return [];
+    return [ShortUrl];
   }
 
   configureMigrations(): Function[] {
-    return [];
+    return [
+      CreateTableShortUrlMigration1686805447945
+    ];
   }
 
 }

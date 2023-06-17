@@ -1,11 +1,34 @@
+import { json } from 'express';
+import * as compression from 'compression';
 import { StoreConfig } from 'cache-manager';
 import { JwtModuleOptions } from '@nestjs/jwt';
-import { DocumentBuilder } from '@nestjs/swagger';
+import { ModuleRef, Reflector } from '@nestjs/core';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ThrottlerModuleOptions } from '@nestjs/throttler';
-import { CacheModuleOptions, Injectable } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
-import { ConfigurationDomainService } from 'src/domain';
+import {
+  CacheModuleOptions,
+  ClassSerializerInterceptor,
+  ExceptionFilter,
+  Injectable,
+  NestInterceptor,
+  PipeTransform,
+  ValidationPipe
+} from '@nestjs/common';
+
+import {
+  CriticalErrorFilter,
+  HttpExceptionFilter,
+  DomainExceptionFilter
+} from 'src/common/filters';
+
+import {
+  ResponseInterceptor,
+  TimeoutInterceptor,
+  VersionInterceptor
+} from 'src/common/interceptors';
 
 import {
   AppConfigType,
@@ -17,6 +40,8 @@ import {
   SecurityConfigType,
   ServerConfigType
 } from 'src/domain';
+
+import { ConfigurationDomainService } from 'src/domain';
 
 @Injectable()
 export class ConfigurationService {
@@ -97,12 +122,62 @@ export class ConfigurationService {
     return this.configurationDomainService.configureCache();
   }
 
+  configureGlobalPipes(): PipeTransform[] {
+    return [
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: true
+      })
+    ];
+  }
+
+  configureGlobalFilters(): ExceptionFilter[] {
+    return [
+      new CriticalErrorFilter(),
+      new HttpExceptionFilter(),
+      new DomainExceptionFilter()
+    ];
+  }
+
+  configureGlobalInterceptors(reflector: Reflector): NestInterceptor[] {
+    return [
+      new ResponseInterceptor(reflector),
+      new TimeoutInterceptor(),
+      new VersionInterceptor(this, reflector),
+      new ClassSerializerInterceptor(reflector)
+    ];
+  }
+
+  configureMiddlewares(): Function[] {
+    return [
+      json({ limit: '10mb' }),
+      compression(this.configureCompression())
+    ];
+  }
+
   configureEntities(): Function[] {
     return this.configurationDomainService.configureEntities();
   }
 
   configureMigrations(): Function[] {
     return this.configurationDomainService.configureMigrations();
+  }
+
+  configureApi(api: NestExpressApplication): NestExpressApplication {
+    const reflector = api.get(Reflector);
+
+    api.enableCors(this.configureCors());
+    api.setGlobalPrefix(this.configureServerGlobalPrefix());
+    api.use(...this.configureMiddlewares());
+    api.useGlobalPipes(...this.configureGlobalPipes());
+    api.useGlobalFilters(...this.configureGlobalFilters());
+    api.useGlobalInterceptors(...this.configureGlobalInterceptors(reflector));
+
+    const document = SwaggerModule.createDocument(api, this.configureSwagger().build());
+    SwaggerModule.setup(this.configureSwaggerPath(), api, document);
+
+    return api;
   }
 
 }

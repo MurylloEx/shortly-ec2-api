@@ -1,1 +1,1 @@
-export * from './1686805447945-CreateTableShortenUrl';
+export * from './1686805447945-CreateTableShortUrl';

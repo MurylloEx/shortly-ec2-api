@@ -1,26 +1,40 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
+import { CommandBus, ICommand, IQuery, QueryBus } from '@nestjs/cqrs';
+import { ShortUrl } from 'src/domain/business/slices/shortly/models';
+import { FetchOneShortUrlQuery } from 'src/domain/business/slices/shortly/queries';
+import { CreateShortUrlCommand, DeleteShortUrlCommand, UpdateShortUrlCommand } from 'src/domain/business/slices/shortly/commands';
 
 @Injectable()
 export class ShortlyDomainService {
 
-  async createByRealUrl(realUrl: string) {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus
+  ) {}
 
+  async fetchByCode(shortCode: string): Promise<ShortUrl> {
+    const query = new FetchOneShortUrlQuery(shortCode);
+    return this.queryBus.execute<IQuery, ShortUrl>(query);
   }
 
-  async getByCode(shortCode: string) {
-
+  async create(realUrl: string): Promise<ShortUrl> {
+    const command = new CreateShortUrlCommand(realUrl);
+    return this.commandBus.execute<ICommand, ShortUrl>(command);
   }
 
-  async deleteByCode(shortCode: string) {
-
+  async deleteByCode(shortCode: string): Promise<ShortUrl> {
+    const command = new DeleteShortUrlCommand(shortCode);
+    return this.commandBus.execute<ICommand, ShortUrl>(command);
   }
 
-  async changeShortenUrl(shortCode: string, realUrl: string) {
-
+  async updateByCode(shortCode: string, realUrl: string): Promise<ShortUrl> {
+    const command = new UpdateShortUrlCommand(shortCode, realUrl);
+    return this.commandBus.execute<ICommand, ShortUrl>(command);
   }
 
-  async incrementAccessCountByCode(shortCode: string) {
-
+  async incrementAccessCountByCode(shortCode: string): Promise<ShortUrl> {
+    const command = new DeleteShortUrlCommand(shortCode);
+    return this.commandBus.execute<ICommand, ShortUrl>(command);
   }
 
 }

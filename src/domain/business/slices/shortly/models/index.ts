@@ -1,1 +1,1 @@
-export * from './shorten-url.model';
+export * from './short-url.model';

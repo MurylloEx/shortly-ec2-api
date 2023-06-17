@@ -22,7 +22,7 @@ import { DomainException } from 'src/domain/exceptions';
 export class DomainModel extends BaseEntity {
 
   @PrimaryGeneratedColumn('uuid')
-  public id: string;
+  public shortId: string;
 
   @CreateDateColumn()
   public createdAt: Date;

@@ -1,1 +1,1 @@
-export * from './fetch-shorten-url.query';
+export * from './fetch-one-short-url.query';
