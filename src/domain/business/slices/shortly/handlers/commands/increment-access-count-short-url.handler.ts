@@ -1,26 +1,26 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { ShortUrl } from 'src/domain/business/slices/shortly/models';
-import { UpdateShortUrlCommand } from 'src/domain/business/slices/shortly/commands';
+import { IncrementAccessCountShortUrlCommand } from 'src/domain/business/slices/shortly/commands';
 import { ShortUrlRepository } from 'src/domain/business/slices/shortly/repositories';
 import { ShortUrlNotUpdatedDomainException } from 'src/domain/business/slices/shortly/exceptions';
 
-@CommandHandler(UpdateShortUrlCommand)
-export class UpdateShortUrlHandler implements ICommandHandler<UpdateShortUrlCommand> {
+@CommandHandler(IncrementAccessCountShortUrlCommand)
+export class IncrementAccessCountShortUrlHandler implements ICommandHandler<IncrementAccessCountShortUrlCommand> {
 
   constructor(
     private readonly repository: ShortUrlRepository
   ) {}
 
-  async execute(command: UpdateShortUrlCommand): Promise<ShortUrl> {
+  async execute(command: IncrementAccessCountShortUrlCommand): Promise<ShortUrl> {
     try {
       const previousShortUrl = await this.repository.fetchOne({
         where: {
           shortCode: command.shortCode
         }
       });
-  
-      previousShortUrl.realUrl = command.realUrl;
+
+      previousShortUrl.accessCount++;
   
       const updateResult = await this.repository.updateById(
         previousShortUrl.shortId, 

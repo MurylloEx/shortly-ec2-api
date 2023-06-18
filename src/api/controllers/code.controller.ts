@@ -9,7 +9,7 @@ export class CodeController {
 
   @Get('/:code')
   async redirectToShortUrl(@Param('code') code: string, @Res() response: Response): Promise<void> {
-    const dto = await this.shortlyService.fetchByCode(code);
+    const dto = await this.shortlyService.incrementAccessCountByCode(code);
     return response.redirect(301, dto.realUrl);
   }
 

@@ -7,11 +7,6 @@ export class ShortlyService {
   
   constructor(private readonly shortlyDomainService: ShortlyDomainService) {}
 
-  async fetchByCode(shortCode: string): Promise<ShortUrlDto> {
-    const entity = await this.shortlyDomainService.fetchByCode(shortCode);
-    return entity.toDto(ShortUrlDto);
-  }
-
   async deleteShortUrl(shortCode: string): Promise<ShortUrlDto> {
     const entity = await this.shortlyDomainService.deleteByCode(shortCode);
     return entity.toDto(ShortUrlDto);
@@ -29,6 +24,11 @@ export class ShortlyService {
 
   async createShortUrl(realUrl: string): Promise<ShortUrlDto> {
     const entity = await this.shortlyDomainService.create(realUrl);
+    return entity.toDto(ShortUrlDto);
+  }
+
+  async incrementAccessCountByCode(shortCode: string): Promise<ShortUrlDto> {
+    const entity = await this.shortlyDomainService.incrementAccessCountByCode(shortCode);
     return entity.toDto(ShortUrlDto);
   }
 

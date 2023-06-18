@@ -7,6 +7,7 @@ import {
   FetchOneShortUrlHandler,
   UpdateShortUrlHandler,
   DeleteShortUrlHandler,
+  IncrementAccessCountShortUrlHandler,
 } from 'src/domain/business/slices/shortly';
 
 import {
@@ -25,6 +26,7 @@ import {
     FetchOneShortUrlHandler,
     UpdateShortUrlHandler,
     DeleteShortUrlHandler,
+    IncrementAccessCountShortUrlHandler,
     ShortUrlRepository,
     ShortlyDomainService
   ],

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandBus, ICommand, IQuery, QueryBus } from '@nestjs/cqrs';
 import { ShortUrl } from 'src/domain/business/slices/shortly/models';
 import { FetchOneShortUrlQuery } from 'src/domain/business/slices/shortly/queries';
-import { CreateShortUrlCommand, DeleteShortUrlCommand, UpdateShortUrlCommand } from 'src/domain/business/slices/shortly/commands';
+import { CreateShortUrlCommand, DeleteShortUrlCommand, IncrementAccessCountShortUrlCommand, UpdateShortUrlCommand } from 'src/domain/business/slices/shortly/commands';
 
 @Injectable()
 export class ShortlyDomainService {
@@ -33,7 +33,7 @@ export class ShortlyDomainService {
   }
 
   async incrementAccessCountByCode(shortCode: string): Promise<ShortUrl> {
-    const command = new DeleteShortUrlCommand(shortCode);
+    const command = new IncrementAccessCountShortUrlCommand(shortCode);
     return this.commandBus.execute<ICommand, ShortUrl>(command);
   }
 
