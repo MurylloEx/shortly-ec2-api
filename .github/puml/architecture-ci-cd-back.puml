@@ -62,7 +62,7 @@ MyDeveloper --> MyCodeStarBack : Push changes
 MyCodeStarBack --> MyS3CodePipelineBackSource : Write source code
 MyS3CodePipelineBackSource <-- MyCodeBuildBack : Fetch source code
 MyCodeBuildBack -left-> MyS3CodePipelineBackBuild : Write build
-MyS3CodePipelineBackBuild -up-> MyCodeDeployBack : Fetch build
+MyS3CodePipelineBackBuild <-up- MyCodeDeployBack : Fetch build
 MyCodeDeployBack -up-> MyS3CodePipelineBackDeploy : Write deploy artifacts
 MyEC2 -left-> MyS3CodePipelineBackDeploy : Fetch last stable release to deployment
 MyCodeDeployBack -right-> MyEC2 : Send a signal using SQS to CodeDeploy Agent
