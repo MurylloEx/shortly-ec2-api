@@ -1,7 +1,7 @@
 import * as Joi from 'joi';
 
 export const ServerSchema = Joi.object({
-  SERVER_HOST: Joi.string().domain().allow('localhost').default('local'),
+  SERVER_HOST: Joi.string().domain().allow('localhost').default('localhost'),
   SERVER_PORT: Joi.number().port().default(80),
   SERVER_GLOBAL_PREFIX: Joi.string().allow('').default(''),
   SERVER_NAME: Joi.string().default('NestJS Service'),
